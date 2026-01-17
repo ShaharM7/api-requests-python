@@ -20,11 +20,13 @@ def authenticate(client: BaseClient):
     Performs login and injects the token into the existing client.
     """
 
-    username = os.getenv("API_PASSWORD")
+    username = os.getenv("API_USERNAME")
     password = os.getenv("API_PASSWORD")
 
     if not username or not password:
-        raise EnvironmentError("Please set API_PASSWORD and API_PASSWORD environment variables")
+        raise EnvironmentError(
+            "Please set API_USERNAME and API_PASSWORD environment variables"
+        )
 
     payload = {
         "username": username,
