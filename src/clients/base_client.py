@@ -1,7 +1,6 @@
+import os
 import requests
 from requests import Response
-
-from config.config import Config
 
 
 class BaseClient:
@@ -11,7 +10,7 @@ class BaseClient:
     """
 
     def __init__(self):
-        self.base_url = Config.BASE_URL
+        self.base_url = os.environ["BASE_URL"]
         self.headers = {
             "Content-Type": "application/json",
             "Accept": "application/json"
