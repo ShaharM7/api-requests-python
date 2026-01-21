@@ -1,8 +1,7 @@
 from pydantic import BaseModel
 
-class AuthRequst(BaseModel):
+class AuthRequest(BaseModel):
     """Request payload for POST /auth"""
-
     username: str
     password: str
 
