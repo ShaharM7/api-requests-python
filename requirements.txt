@@ -1,8 +1,7 @@
-pytest
-playwright
-pytest-playwright
 allure-pytest
-python-dotenv
-requests
 Faker
+faker-food
+requests
+pytest
+python-dotenv
 pydantic
