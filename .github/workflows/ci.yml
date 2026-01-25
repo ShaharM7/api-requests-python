@@ -1,0 +1,33 @@
+name: CI - API Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create .env file
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
+          echo "HTTP_CLIENT=${{ secrets.HTTP_CLIENT }}" >> .env
+          echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> .env
+          echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
+
+      - name: Run Tests
+        run: pytest
