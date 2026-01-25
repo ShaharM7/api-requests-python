@@ -33,6 +33,12 @@ class RequestsClient(AbstractBaseClient):
             requests.put(url=url, headers=self.headers, json=payload, **kwargs)
         )
 
+    def patch(self, endpoint: str, payload: dict = None, **kwargs) -> HttpResponse:
+        url=f"{self.base_url}{endpoint}"
+        return self._convert_requests_response_to_http_response(
+            requests.patch(url=url, headers=self.headers, json=payload, **kwargs)
+        )
+
     def delete(self, endpoint: str, **kwargs) -> HttpResponse:
         url=f"{self.base_url}{endpoint}"
         return self._convert_requests_response_to_http_response(
