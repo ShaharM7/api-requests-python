@@ -28,3 +28,15 @@ class HttpResponse:
     def headers(self) -> dict | None:
         """Response headers"""
         return self._headers
+
+    def raise_for_status(self) -> None:
+        """
+        Raise an exception if status code indicates an error (4xx or 5xx).
+        If successful (2xx), does nothing.
+        """
+        if 400 <= self._status_code < 600:
+            from requests.exceptions import HTTPError
+            raise HTTPError(
+                f"{self._status_code} Client Error: {self._body[:200]}",
+                response=self
+            )

@@ -47,9 +47,8 @@ def factory_creation_client(loading_environments_variables) -> AbstractBaseClien
     return client
 
 
-# Clients - simillar to steps
 @pytest.fixture(scope="session")
-def initialize_auth_client(factory_creation_client) -> AuthClient:
+def initialize_auth_client(factory_creation_client) -> AuthClient: # soliD - DI 
     auth_client: AuthClient = AuthClient(factory_creation_client)
     logging.info("Initialized Auth Client")
     return auth_client
@@ -58,16 +57,16 @@ def initialize_auth_client(factory_creation_client) -> AuthClient:
 @pytest.fixture(scope="session", autouse=True)
 def authenticate_and_pass_token_to_header(factory_creation_client: AbstractBaseClient, initialize_auth_client: AuthClient):
     """
-    Performs login once and injects the token into the existing AbstractBaseClient.
+    Performs login once With Admin Privilege and injects the token into the existing AbstractBaseClient.
     """
-    auth_response: AuthResponse = initialize_auth_client.authenticate()
+    auth_response: AuthResponse = initialize_auth_client.authenticate_with_admin_privilege()
     factory_creation_client.update_headers({"Authorization": auth_response.token})
     logging.info("Authentication successful. Token Passed to Request Header")
 
 
 @pytest.fixture(scope="session")
-def initialize_booking_client(authenticate_and_pass_token_to_header) -> BookingClient:
-    booking_client: BookingClient = BookingClient(factory_creation_client)
+def initialize_booking_client(initialize_auth_client: AuthClient) -> BookingClient:
+    booking_client: BookingClient = BookingClient(initialize_auth_client.client)
     logging.info("Initialized Booking Client")
     return booking_client
     

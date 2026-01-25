@@ -17,14 +17,14 @@ class AuthClient:
         self.client = client
         self.auth_endpoint = "/auth"
 
-    def authenticate(self) -> AuthResponse:
+    def authenticate_with_admin_privilege(self) -> AuthResponse:
         auth_model_request: BaseModel = AuthRequest(
             username=os.getenv("ADMIN_USERNAME"),
             password=os.getenv("ADMIN_PASSWORD")
          )
 
         http_response: HttpResponse = self.client.post(endpoint=self.auth_endpoint, payload=auth_model_request.model_dump(mode="json"))
-        assert http_response.status_code == 200, f"Authentication Failed"
+        assert http_response.status_code == 200, f"Authentication Failed With Status Code {http_response.status_code}"
 
         return AuthResponse(**http_response.json())
 

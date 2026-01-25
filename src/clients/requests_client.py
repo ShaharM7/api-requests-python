@@ -36,11 +36,11 @@ class RequestsClient(AbstractBaseClient):
     def delete(self, endpoint: str, **kwargs) -> HttpResponse:
         url=f"{self.base_url}{endpoint}"
         return self._convert_requests_response_to_http_response(
-            requests.delete(url=url, headers=self.headers **kwargs)
+            requests.delete(url=url, headers=self.headers, **kwargs)
         )
 
     def update_headers(self, headers: dict) -> None:
-        requests.Session().headers.update(headers)
+        self.headers.update(headers)
 
     def _convert_requests_response_to_http_response(self, resposne: Response) -> HttpResponse:
         return HttpResponse(
