@@ -17,6 +17,10 @@ class AbstractBaseClient(ABC):
         pass
 
     @abstractmethod
+    def patch(self, endpoint: str, payload: dict, **kwargs) -> HttpResponse:
+        pass
+
+    @abstractmethod
     def delete(self, endpoint: str, **kwargs) -> HttpResponse:
         pass
 

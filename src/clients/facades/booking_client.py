@@ -63,3 +63,58 @@ class BookingClient:
         http_response.raise_for_status()
         
         return [item["bookingid"] for item in http_response.json()]
+
+    # ============ UPDATE METHODS ============
+
+    def update_booking(self, booking_id: int, booking_model: BookingModel) -> BookingModel:
+        """Full update of a booking (PUT)"""
+        logging.info(f"Updating booking {booking_id}:\n{booking_model.model_dump_json(indent=2)}")
+        
+        update_endpoint = f"{self.booking_endpoint}/{booking_id}"
+        http_response: HttpResponse = self.client.put(
+            endpoint=update_endpoint,
+            payload=booking_model.model_dump(mode="json")
+        )
+        http_response.raise_for_status()
+        
+        return BookingModel(**http_response.json())
+
+    def partial_update_booking(self, booking_id: int, updates: dict) -> BookingModel:
+        """Partial update of a booking (PATCH)"""
+        logging.info(f"Partial update booking {booking_id}:\n{json.dumps(updates, indent=2, default=str)}")
+        
+        patch_endpoint = f"{self.booking_endpoint}/{booking_id}"
+        http_response: HttpResponse = self.client.patch(
+            endpoint=patch_endpoint,
+            payload=updates
+        )
+        http_response.raise_for_status()
+        
+        return BookingModel(**http_response.json())
+
+    def update_booking_raw(self, booking_id: int, payload: dict) -> HttpResponse:
+        """Update booking with raw dict (for negative testing)"""
+        update_endpoint = f"{self.booking_endpoint}/{booking_id}"
+        return self.client.put(endpoint=update_endpoint, payload=payload)
+
+    def partial_update_booking_raw(self, booking_id: int, payload: dict) -> HttpResponse:
+        """Partial update booking with raw dict (for negative testing)"""
+        patch_endpoint = f"{self.booking_endpoint}/{booking_id}"
+        return self.client.patch(endpoint=patch_endpoint, payload=payload)
+
+    # ============ DELETE METHODS ============
+
+    def delete_booking(self, booking_id: int) -> HttpResponse:
+        """Delete a booking"""
+        logging.info(f"Deleting booking {booking_id}")
+        
+        delete_endpoint = f"{self.booking_endpoint}/{booking_id}"
+        http_response: HttpResponse = self.client.delete(endpoint=delete_endpoint)
+        http_response.raise_for_status()
+        
+        return http_response
+
+    def delete_booking_raw(self, booking_id: int) -> HttpResponse:
+        """Delete booking returning raw response (for negative testing)"""
+        delete_endpoint = f"{self.booking_endpoint}/{booking_id}"
+        return self.client.delete(endpoint=delete_endpoint)
