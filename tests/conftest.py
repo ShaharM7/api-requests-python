@@ -4,10 +4,10 @@ import os
 import pytest
 from dotenv import load_dotenv
 
-from src.clients.facades.auth_client import AuthClient
 from src.clients.abstract_base_client import AbstractBaseClient
-from src.clients.facades.booking_client import BookingClient
 from src.clients.client_factory import ClientFactory
+from src.clients.facades.auth_client import AuthClient
+from src.clients.facades.booking_client import BookingClient
 from src.models.auth.auth_models import AuthResponse
 
 
@@ -19,21 +19,21 @@ def loading_environments_variables():
     if not load_dotenv(".env"):
         raise FileNotFoundError(".env file missing! Please check your .env file")
 
-    _REQUIRED_ENV: [] = [
+    _REQUIRED_ENV: list[str] = [
         "BASE_URL",
         "HTTP_CLIENT",
         "ADMIN_USERNAME",
         "ADMIN_PASSWORD",
     ]
 
-    _missing_env: [str] = []
+    _missing_env: list[str] = []
     for env in _REQUIRED_ENV:
         if env not in os.environ:
             _missing_env.append(env)
 
     if _missing_env:
         raise EnvironmentError(f"CRITICAL: Missing environments_variables: {', '.join(_missing_env)}")
-        
+
     logging.info("Finish Loading Environments Variables")
 
 
@@ -48,14 +48,15 @@ def factory_creation_client(loading_environments_variables) -> AbstractBaseClien
 
 
 @pytest.fixture(scope="session")
-def initialize_auth_client(factory_creation_client) -> AuthClient: # soliD - DI 
+def initialize_auth_client(factory_creation_client) -> AuthClient:  # soliD - DI
     auth_client: AuthClient = AuthClient(factory_creation_client)
     logging.info("Initialized Auth Client")
     return auth_client
 
 
 @pytest.fixture(scope="session", autouse=True)
-def authenticate_and_pass_token_to_header(factory_creation_client: AbstractBaseClient, initialize_auth_client: AuthClient):
+def authenticate_and_pass_token_to_header(factory_creation_client: AbstractBaseClient,
+                                          initialize_auth_client: AuthClient):
     """
     Performs login once With Admin Privilege and injects the token into the existing AbstractBaseClient.
     """
@@ -69,4 +70,3 @@ def initialize_booking_client(initialize_auth_client: AuthClient) -> BookingClie
     booking_client: BookingClient = BookingClient(initialize_auth_client.client)
     logging.info("Initialized Booking Client")
     return booking_client
-    

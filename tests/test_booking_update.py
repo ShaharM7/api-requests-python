@@ -1,14 +1,12 @@
 from datetime import date, timedelta
-import logging
 
 import pytest
-from requests import HTTPError
 
 from src.clients.facades.booking_client import BookingClient
 from src.models.booking.bookings_models import BookingDates, BookingModel, BookingResponse, generate_fake_booking_model
 from src.models.http_response import HttpResponse
 
-
+@pytest.mark.update
 class TestUpdateBookingPut:
     """Tests for PUT /booking/:id - Full update"""
 
@@ -53,7 +51,7 @@ class TestUpdateBookingPut:
         )
 
         # Retrieve and verify
-        retrieved: BookingModel = initialize_booking_client.get_booking(booking_id=booking_id)
+        retrieved: BookingModel = initialize_booking_client.get_booking(booking_id=str(booking_id))
 
         assert retrieved.firstname == updated_booking.firstname
         assert retrieved.lastname == updated_booking.lastname
