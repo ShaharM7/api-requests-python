@@ -1,14 +1,11 @@
-from datetime import date, timedelta
-import logging
-
 import pytest
 from requests import HTTPError
 
 from src.clients.facades.booking_client import BookingClient
-from src.models.booking.bookings_models import BookingDates, BookingModel, BookingResponse, generate_fake_booking_model
+from src.models.booking.bookings_models import BookingModel, BookingResponse, generate_fake_booking_model
 from src.models.http_response import HttpResponse
 
-
+@pytest.mark.delete
 class TestDeleteBooking:
     """Tests for DELETE /booking/:id"""
 
@@ -44,7 +41,7 @@ class TestDeleteBooking:
 
         # Try to retrieve - should fail with 404
         with pytest.raises(HTTPError) as exc_info:
-            initialize_booking_client.get_booking(booking_id=booking_id)
+            initialize_booking_client.get_booking(booking_id=str(booking_id))
 
         assert exc_info.value.response.status_code == 404
 

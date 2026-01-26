@@ -37,7 +37,6 @@ def generate_fake_booking_model() -> BookingModel:
     fake = Faker()
     fake.add_provider(FoodProvider) # for fun ;)
 
-
     checkin = fake.date_object()
 
     from datetime import timedelta
